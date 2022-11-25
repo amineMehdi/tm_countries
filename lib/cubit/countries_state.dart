@@ -1,17 +1,24 @@
-part of "countries_cubit.dart";
+
+part of 'countries_cubit.dart';
 
 @immutable
 abstract class CountriesState{
-  get countriesData => CountriesData;
+  get countriesData => Country;
+  get message => String;
 }
 
-class WeatherInitialState extends CountriesState{}
+class CountriesInitialState extends CountriesState{}
 
-class WeatherLoadingState extends CountriesState{}
+class CountriesLoadingState extends CountriesState{}
 
-class WeatherLoadedState extends CountriesState{
-  final CountriesData countriesData;
+class CountriesErrorState extends CountriesState{
+  final String message;
+  CountriesErrorState({required this.message});
+}
 
-  WeatherLoadedState({required this.countriesData});
 
+class CountriesLoadedState extends CountriesState{
+  final List<Country> countriesData;
+
+  CountriesLoadedState({required this.countriesData});
 }

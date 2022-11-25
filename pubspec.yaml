@@ -39,6 +39,7 @@ dependencies:
   intl:
   bloc:
   flutter_bloc:
+  http:
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +51,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner:
+  json_serializable:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -61,7 +64,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets/countries.json
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -89,6 +93,10 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+  fonts:
+    - family: Spartan
+      fonts:
+        - asset: assets/fonts/LeagueSpartan-VariableFont_wght.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
