@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tm_countries/utils/colors.dart';
 
 import 'package:tm_countries/views/accueil/accueil.dart';
 import 'package:tm_countries/views/components/page_header.dart';
@@ -20,10 +21,16 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Spartan',
         textTheme: const TextTheme(
           headline1: TextStyle(
-            color: Color.fromARGB(255, 151, 140, 140),
+            color: CustomColors.lightGrey,
             letterSpacing: 2.5,
             fontSize: 50,
             fontWeight: FontWeight.w700,
+          ),
+          headline2: TextStyle(
+            color: CustomColors.grey,
+            letterSpacing: 2.5,
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -52,6 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: "Favoris", iconData: Icons.favorite, iconColor: Colors.orange),
     const PageHeader(
         title: "About", iconData: Icons.question_mark, iconColor: Colors.green),
+    const PageHeader(
+        title: "My Country", iconData: Icons.location_on, iconColor: Colors.teal),
   ];
 
   void _onItemTapped(int index) {
@@ -91,6 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.question_mark),
           label: 'About',
           backgroundColor: Colors.green,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.location_on),
+          label: 'My Country',
+          backgroundColor: Colors.teal,
         ),
       ],
       currentIndex: _currentIndex,
