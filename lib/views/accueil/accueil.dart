@@ -20,7 +20,7 @@ class _MyWidgetState extends State<PageAccueil> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CountriesCubit(),
+          create: (context) => CountriesCubit()..fetchAllCountries(),
         )
       ],
       child: Expanded(

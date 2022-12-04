@@ -32,6 +32,12 @@ class MyApp extends StatelessWidget {
             fontSize: 30,
             fontWeight: FontWeight.w600,
           ),
+          headline3: TextStyle(
+            color: CustomColors.darkGrey,
+            letterSpacing: 2,
+            fontSize: 26,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       debugShowCheckedModeBanner: false,
@@ -72,11 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          _widgetPages.elementAt(_currentIndex),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            _widgetPages.elementAt(_currentIndex),
+          ],
+        ),
       ),
       bottomNavigationBar: _navigationBar(context),
     );

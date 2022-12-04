@@ -20,6 +20,8 @@ class CountriesCubit extends Cubit<CountriesState> {
       // countriesData = (response.data as List)
       //     .map((country) => Country.fromJson(country))
       //     .toList();
+
+      // TODO change to remote api
       var response = await rootBundle.loadString('countries.json');
       countriesData = (jsonDecode(response) as List)
           .map((country) => Country.fromJson(country))
