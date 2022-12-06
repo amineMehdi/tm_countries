@@ -8,7 +8,7 @@ Future<Color> getImagePalette (ImageProvider imageProvider) async {
   return paletteGenerator.dominantColor!.color;
 }
 
-String getContinentImageUrl(String name) {
+String getRegionImageUrl(String name) {
   switch (name) {
     case 'Africa':
       return 'images/regions/africa.svg';

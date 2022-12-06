@@ -67,8 +67,6 @@ class _MyWidgetState extends State<PageAccueil> {
             ),
             FloatingActionButton(
                 onPressed: () {
-                  // BlocProvider.of<CountriesCubit>(context)
-                  //     .fetchACountry(name: 'peru');
                   BlocProvider.of<CountriesCubit>(context).fetchAllCountries();
                 },
                 child: const Icon(Icons.refresh))
@@ -119,7 +117,7 @@ class _MyWidgetState extends State<PageAccueil> {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w500,
                       color: CustomColors.grey),
                 )),
           ],

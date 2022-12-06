@@ -41,7 +41,8 @@ dependencies:
   flutter_bloc:
   http:
   palette_generator: ^0.3.3+2
-  flutter_svg: ^1.1.6
+  # flutter_svg: ^1.1.6
+  flutter_svg_provider: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +71,6 @@ flutter:
     - assets/countries.json
     - assets/images/
     - assets/images/regions/
-    - assets/images/subregions/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -102,6 +102,16 @@ flutter:
     - family: Spartan
       fonts:
         - asset: assets/fonts/LeagueSpartan-VariableFont_wght.ttf
+        - asset: assets/fonts/LeagueSpartan-Bold.ttf
+        - asset: assets/fonts/LeagueSpartan-ExtraBold.ttf
+        - asset: assets/fonts/LeagueSpartan-ExtraLight.ttf
+        - asset: assets/fonts/LeagueSpartan-Light.ttf
+        - asset: assets/fonts/LeagueSpartan-Medium.ttf
+        - asset: assets/fonts/LeagueSpartan-Regular.ttf
+        - asset: assets/fonts/LeagueSpartan-SemiBold.ttf
+        - asset: assets/fonts/LeagueSpartan-Thin.ttf
+        - asset: assets/fonts/LeagueSpartan-Black.ttf
+        
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

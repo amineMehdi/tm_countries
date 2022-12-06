@@ -36,8 +36,7 @@ class Country {
   
   @JsonKey(name: 'flags')
   final CountryFlag? countryFlag;
-
-
+  
   Country ({
     required this.name,
     required this.region,

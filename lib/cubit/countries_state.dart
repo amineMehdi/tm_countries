@@ -3,8 +3,7 @@ part of 'countries_cubit.dart';
 
 @immutable
 abstract class CountriesState{
-  get countriesData => Country;
-  get message => String;
+  get countriesData => List<Country>;
 }
 
 class CountriesInitialState extends CountriesState{}
@@ -19,6 +18,10 @@ class CountriesErrorState extends CountriesState{
 
 class CountriesLoadedState extends CountriesState{
   final List<Country> countriesData;
-
   CountriesLoadedState({required this.countriesData});
+}
+
+class NeighbouringCountriesLoadedState extends CountriesState {
+  final List<Country> countriesData;
+  NeighbouringCountriesLoadedState({required this.countriesData});
 }

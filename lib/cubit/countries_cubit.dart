@@ -34,28 +34,46 @@ class CountriesCubit extends Cubit<CountriesState> {
     }
   }
 
-  Future<void> fetchACountry({required String name}) async {
+  Future<void> fetchNeighbours(List<String>? borders) async {
     emit(CountriesLoadingState());
-    try {
-      var response =
-          await Dio().get("https://restcountries.com/v3.1/name/$name");
-      if (response.statusCode == 200) {
-        Country countryData;
 
-        Map<String, dynamic> country = response.data[0];
-        countryData = Country.fromJson(country);
-        emit(CountriesLoadedState(countriesData: [countryData]));
-      } else {
-        emit(CountriesErrorState(message: "Failed loading country"));
-      }
+    try {
+      List<Country> countriesData = [];
+      borders?.forEach((border) async {
+        var response = await Dio()
+            .get("https://restcountries.com/v3.1/alpha?codes=$border");
+        if (response.statusCode == 200) {
+          Country countryData = Country.fromJson(response.data[0]);
+          countriesData.add(countryData);
+          print("$border ${countryData.name.common}");
+        }
+      });
+      emit(NeighbouringCountriesLoadedState(countriesData: countriesData));
     } catch (e) {
       emit(CountriesErrorState(message: e.toString()));
+      print("Error : $e");
     }
+
+    //   try {
+    //   var response =
+    //       await Dio().get("https://restcountries.com/v3.1/name/$name");
+    //   if (response.statusCode == 200) {
+    //     Country countryData;
+
+    //     Map<String, dynamic> country = response.data[0];
+    //     countryData = Country.fromJson(country);
+    //     emit(CountriesLoadedState(countriesData: [countryData]));
+    //   } else {
+    //     emit(CountriesErrorState(message: "Failed loading country"));
+    //   }
+    // } catch (e) {
+    //   emit(CountriesErrorState(message: e.toString()));
+    // }
   }
 
   @override
   void onChange(Change<CountriesState> change) {
     super.onChange(change);
-    // print(change);
+    print(change);
   }
 }
