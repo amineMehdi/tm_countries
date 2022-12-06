@@ -41,7 +41,7 @@ dependencies:
   flutter_bloc:
   http:
   palette_generator: ^0.3.3+2
-  # flutter_svg: ^1.1.6
+  flutter_svg: ^1.1.6
   flutter_svg_provider: ^1.0.3
 
 dev_dependencies:
@@ -71,6 +71,7 @@ flutter:
     - assets/countries.json
     - assets/images/
     - assets/images/regions/
+    - assets/icons/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -77,8 +77,6 @@ class _MyWidgetState extends State<PageAccueil> {
           const Text("No data"),
           FloatingActionButton(
               onPressed: () {
-                // BlocProvider.of<CountriesCubit>(context)
-                //     .fetchACountry(name: 'peru');
                 BlocProvider.of<CountriesCubit>(context).fetchAllCountries();
               },
               child: const Icon(Icons.refresh))
