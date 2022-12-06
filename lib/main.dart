@@ -38,6 +38,12 @@ class MyApp extends StatelessWidget {
             fontSize: 26,
             fontWeight: FontWeight.w400,
           ),
+          headline4: TextStyle(
+            color: CustomColors.darkGrey,
+            letterSpacing: 2,
+            fontSize: 21,
+            fontWeight: FontWeight.w300,
+          ),
         ),
       ),
       debugShowCheckedModeBanner: false,

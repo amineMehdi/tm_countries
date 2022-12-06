@@ -39,7 +39,7 @@ class CountriesCubit extends Cubit<CountriesState> {
 
     try {
       List<Country> countriesData = [];
-      borders?.forEach((border) async {
+      for (var border in borders!) {
         var response = await Dio()
             .get("https://restcountries.com/v3.1/alpha?codes=$border");
         if (response.statusCode == 200) {
@@ -47,8 +47,17 @@ class CountriesCubit extends Cubit<CountriesState> {
           countriesData.add(countryData);
           print("$border ${countryData.name.common}");
         }
-      });
-      emit(NeighbouringCountriesLoadedState(countriesData: countriesData));
+      }
+      // borders?.forEach((border) async {
+        // var response = await Dio()
+        //     .get("https://restcountries.com/v3.1/alpha?codes=$border");
+        // if (response.statusCode == 200) {
+        //   Country countryData = Country.fromJson(response.data[0]);
+        //   countriesData.add(countryData);
+        //   print("$border ${countryData.name.common}");
+        // }
+      // });
+      emit(NeighbouringCountriesLoadedState(neighbourCountries: countriesData));
     } catch (e) {
       emit(CountriesErrorState(message: e.toString()));
       print("Error : $e");

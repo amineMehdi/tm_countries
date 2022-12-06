@@ -3,7 +3,6 @@ part of 'countries_cubit.dart';
 
 @immutable
 abstract class CountriesState{
-  get countriesData => List<Country>;
 }
 
 class CountriesInitialState extends CountriesState{}
@@ -22,6 +21,6 @@ class CountriesLoadedState extends CountriesState{
 }
 
 class NeighbouringCountriesLoadedState extends CountriesState {
-  final List<Country> countriesData;
-  NeighbouringCountriesLoadedState({required this.countriesData});
+  final List<Country> neighbourCountries;
+  NeighbouringCountriesLoadedState({required this.neighbourCountries});
 }

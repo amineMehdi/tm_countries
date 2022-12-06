@@ -27,119 +27,121 @@ class _CountryInfoState extends State<CountryInfo> {
         )
       ],
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(widget.country.countryFlag!.png),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25.0),
-                    child: Row(
-                      children: [
-                        CustomBackButton(
-                            imageUrl: widget.country.countryFlag!.png),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Text(
-                          "${widget.country.emojiFlag} ${widget.country.name.common}",
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
+        body: SingleChildScrollView(
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(widget.country.countryFlag!.png),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Text(
-                    widget.country.name.official,
-                    style: Theme.of(context).textTheme.headline2,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  _regionSection(context),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 20),
-                      decoration: BoxDecoration(
-                        color: CustomColors.grey.withOpacity(0.16),
-                        borderRadius: BorderRadius.circular(15.0),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: Row(
+                          children: [
+                            CustomBackButton(
+                                imageUrl: widget.country.countryFlag!.png),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Text(
+                              "${widget.country.emojiFlag} ${widget.country.name.common}",
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ],
+                        ),
                       ),
-                      height: 100,
-                      width: double.infinity,
-                      child: BlocBuilder<CountriesCubit, CountriesState>(
-                          builder:
-                              (BuildContext context, CountriesState state) {
+                      Text(
+                        widget.country.name.official,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      _regionSection(context),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      BlocBuilder<CountriesCubit, CountriesState>(builder:
+                          (BuildContext context, CountriesState state) {
                         if (state is NeighbouringCountriesLoadedState) {
-                          // return GridView.count(
-                          //   crossAxisCount: 3,
-                          //   childAspectRatio: 2.5,
-                          //   crossAxisSpacing: 10,
-                          //   mainAxisSpacing: 10,
-                          //   children: [
-                          //     Text("${state.countriesData.length}"),
-                          //     ...state.countriesData
-                          //         .map((country) =>
-                          //             _neighborCountryListItem(context, country))
-                          //         .toList(),
-                          //   ],
-                          // );
-                          // children: state.countriesData
-                          //     .map((country) => _neighborCountryListItem(context, country))
-                          //     .toList(),
+                          double contHeight =
+                              (state.neighbourCountries.length / 3)
+                                  .ceilToDouble();
 
-                          return GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 2.5,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                              ),
-                              itemCount: state.countriesData.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Text("${state.countriesData.length}");
-                              });
+                          return Container(
+                            height: contHeight * 150.0 + 50.0,
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 20),
+                            decoration: BoxDecoration(
+                              color: CustomColors.grey.withOpacity(0.16),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 10,
+                                        mainAxisSpacing: 10,
+                                        mainAxisExtent: 150),
+                                itemCount: state.neighbourCountries.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _neighbourCountryListItem(
+                                      context, state.neighbourCountries[index]);
+                                }),
+                          );
                         } else {
                           return const Center(
                             child: Text("No Neighbours"),
                           );
                         }
-                      })),
-                ],
-              ),
+                      }),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _neighborCountryListItem(BuildContext context, Country country) {
+  Widget _neighbourCountryListItem(BuildContext context, Country country) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      constraints: const BoxConstraints(minWidth: 120),
+      width: 120,
+      height: 450,
       decoration: BoxDecoration(
         color: Colors.teal.withOpacity(0.16),
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Text("${country.emojiFlag} ${country.name.common}"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(country.emojiFlag!, style: const TextStyle(fontSize: 40)),
+          const SizedBox(height: 15),
+          Text(country.name.common,
+              style: Theme.of(context).textTheme.headline4,
+              textAlign: TextAlign.center),
+        ],
+      ),
     );
   }
 
