@@ -32,9 +32,12 @@ class FavouritesPage extends StatelessWidget {
 
       if (state is! FavouritesLoadedState || state.countriesData.isEmpty) {
         return Expanded(
-          child: Text(
-            "Aucun pays favoris",
-            style: Theme.of(context).textTheme.headline3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: Text(
+              "Aucun pays favoris",
+              style: Theme.of(context).textTheme.headline3,
+            ),
           ),
         );
       }

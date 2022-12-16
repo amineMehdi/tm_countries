@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tm_countries/cubit/countries_cubit.dart';
 import 'package:tm_countries/cubit/favourites_cubit.dart';
 import 'package:tm_countries/utils/colors.dart';
+import 'package:tm_countries/views/about/about_page.dart';
 
 import 'package:tm_countries/views/accueil/accueil.dart';
 import 'package:tm_countries/views/components/page_header.dart';
@@ -70,8 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _widgetPages = <Widget>[
     const PageAccueil(),
     const FavouritesPage(),
-    const PageHeader(
-        title: "About", iconData: Icons.question_mark, iconColor: Colors.green),
+    const AboutPage(),
     const PageHeader(
         title: "My Country", iconData: Icons.location_on, iconColor: Colors.teal),
   ];
