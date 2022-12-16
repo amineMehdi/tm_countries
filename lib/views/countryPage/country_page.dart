@@ -5,9 +5,10 @@ import 'package:tm_countries/models/country.dart';
 import 'package:tm_countries/utils/colors.dart';
 import 'package:tm_countries/utils/utils.dart' as utils;
 import 'package:tm_countries/views/countryPage/back_button.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 import 'package:tm_countries/cubit/countries_cubit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CountryInfo extends StatefulWidget {
   final Country country;
@@ -29,74 +30,72 @@ class _CountryInfoState extends State<CountryInfo> {
       ],
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _imageHeader(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: Row(
-                          children: [
-                            CustomBackButton(
-                                imageUrl: widget.country.countryFlag!.png),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            Text(
-                              "${widget.country.emojiFlag} ${widget.country.name.common}",
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                          ],
-                        ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _imageHeader(),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 25.0),
+                      child: Row(
+                        children: [
+                          CustomBackButton(
+                              imageUrl: widget.country.countryFlag!.png),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            "${widget.country.emojiFlag} ${widget.country.name.common}",
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ],
                       ),
-                      Text(
-                        widget.country.name.official,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      _regionSection(context),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Text(
-                        "Neighbouring Countries",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline2!
-                            .merge(const TextStyle(color: Colors.blue)),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      _neighbourCountries(),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      _capitalCityWidget(context,
-                          capital: widget.country.capitals![0]),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      _areaAndPopulationSection(context),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      _googleMapsRedirectWidget(),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      widget.country.name.official,
+                      style: Theme.of(context).textTheme.headline2,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _regionSection(context),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Text(
+                      "Neighbouring Countries",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .merge(const TextStyle(color: Colors.blue)),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _neighbourCountries(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _capitalCityWidget(context,
+                        capital: widget.country.capitals![0]),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _areaAndPopulationSection(context),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _googleMapsRedirectWidget(),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -105,22 +104,32 @@ class _CountryInfoState extends State<CountryInfo> {
 
   Widget _googleMapsRedirectWidget() {
     return Center(
-      child: Container(
-        height: 200,
-        width: 350,
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(15),
+      child: TextButton(
+        onPressed: () async {
+          final String url = widget.country.countryMap!.googleMaps!;
+          if (!await launchUrl(Uri.parse(url))) {
+            throw 'Could not launch $url';
+          }
+        },
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+          backgroundColor: Colors.teal.withOpacity(0.1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-        child: Row(children: [
-          Flexible(
-              child: SvgPicture.asset(
-            "icons/google_maps.svg",
-            width: 30,
-            height: 30,
-            fit: BoxFit.cover,
-          ))
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          const Icon(Icons.map_outlined, size: 40, color: Colors.teal),
+          const SizedBox(
+            width: 40,
+          ),
+          Text("Google Maps", style: Theme.of(context).textTheme.headline3),
+          const SizedBox(
+            width: 40,
+          ),
+          const Icon(Icons.launch_outlined, size: 40, color: Colors.teal),
         ]),
       ),
     );
@@ -392,10 +401,11 @@ class _CountryInfoState extends State<CountryInfo> {
             height: 150,
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: svg_provider.Svg(
-                utils.getRegionImageUrl(widget.country.region),
-                color: Colors.blue,
-              )),
+                image: svg_provider.Svg(
+                  utils.getRegionImageUrl(widget.country.region),
+                  color: Colors.blue,
+                ),
+              ),
             ),
           ),
         ),

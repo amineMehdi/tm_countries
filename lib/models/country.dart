@@ -37,6 +37,7 @@ class Country {
   @JsonKey(name: 'flags')
   final CountryFlag? countryFlag;
   
+  bool isFavourite = false;
   Country ({
     required this.name,
     required this.region,

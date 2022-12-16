@@ -35,8 +35,6 @@ class CountriesCubit extends Cubit<CountriesState> {
   }
 
   Future<void> fetchNeighbours(List<String>? borders) async {
-    emit(CountriesLoadingState());
-
     try {
       List<Country> countriesData = [];
       for (var border in borders!) {
@@ -48,41 +46,35 @@ class CountriesCubit extends Cubit<CountriesState> {
           print("$border ${countryData.name.common}");
         }
       }
-      // borders?.forEach((border) async {
-        // var response = await Dio()
-        //     .get("https://restcountries.com/v3.1/alpha?codes=$border");
-        // if (response.statusCode == 200) {
-        //   Country countryData = Country.fromJson(response.data[0]);
-        //   countriesData.add(countryData);
-        //   print("$border ${countryData.name.common}");
-        // }
-      // });
       emit(NeighbouringCountriesLoadedState(neighbourCountries: countriesData));
     } catch (e) {
       emit(CountriesErrorState(message: e.toString()));
       print("Error : $e");
     }
-
-    //   try {
-    //   var response =
-    //       await Dio().get("https://restcountries.com/v3.1/name/$name");
-    //   if (response.statusCode == 200) {
-    //     Country countryData;
-
-    //     Map<String, dynamic> country = response.data[0];
-    //     countryData = Country.fromJson(country);
-    //     emit(CountriesLoadedState(countriesData: [countryData]));
-    //   } else {
-    //     emit(CountriesErrorState(message: "Failed loading country"));
-    //   }
-    // } catch (e) {
-    //   emit(CountriesErrorState(message: e.toString()));
-    // }
   }
 
   @override
   void onChange(Change<CountriesState> change) {
     super.onChange(change);
-    print(change);
+    print(state.toString());
+  }
+
+  void toggleFavourite(Country country) {
+    if (state is! CountriesLoadedState) return;
+    CountriesLoadedState currentState = state as CountriesLoadedState;
+    int countryIndex = currentState.countriesData.indexWhere((otherCountries) =>
+        otherCountries.name.official == country.name.official);
+    currentState.countriesData[countryIndex].isFavourite = isFavourite(country) ? false : true;
+    
+    emit(CountriesLoadedState(countriesData: currentState.countriesData));
+  }
+
+  bool isFavourite(Country country) {
+    if (state is! CountriesLoadedState) return false;
+    return (state as CountriesLoadedState)
+        .countriesData[(state as CountriesLoadedState).countriesData.indexWhere(
+            (otherCountries) =>
+                otherCountries.name.official == country.name.official)]
+        .isFavourite;
   }
 }

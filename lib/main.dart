@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tm_countries/cubit/countries_cubit.dart';
+import 'package:tm_countries/cubit/favourites_cubit.dart';
 import 'package:tm_countries/utils/colors.dart';
 
 import 'package:tm_countries/views/accueil/accueil.dart';
 import 'package:tm_countries/views/components/page_header.dart';
+import 'package:tm_countries/views/favourites/favourite_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -65,10 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final List<Widget> _widgetPages = <Widget>[
     const PageAccueil(),
-    // const PageHeader(
-    //     title: "Accueil", iconData: Icons.home, iconColor: Colors.blue),
-    const PageHeader(
-        title: "Favoris", iconData: Icons.favorite, iconColor: Colors.orange),
+    const FavouritesPage(),
     const PageHeader(
         title: "About", iconData: Icons.question_mark, iconColor: Colors.green),
     const PageHeader(
@@ -83,17 +84,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _widgetPages.elementAt(_currentIndex),
-          ],
+    return MultiBlocProvider(
+      providers : [
+        BlocProvider(create: (context) => CountriesCubit()..fetchAllCountries()),
+        BlocProvider(create: (context) => FavouritesCubit()),
+      ],
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _widgetPages.elementAt(_currentIndex),
+            ],
+          ),
         ),
+        bottomNavigationBar: _navigationBar(context),
       ),
-      bottomNavigationBar: _navigationBar(context),
     );
   }
 
