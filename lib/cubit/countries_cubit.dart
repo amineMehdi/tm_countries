@@ -56,7 +56,7 @@ class CountriesCubit extends Cubit<CountriesState> {
   @override
   void onChange(Change<CountriesState> change) {
     super.onChange(change);
-    print(state.toString());
+    // print(state.toString());
   }
 
   void toggleFavourite(Country country) {

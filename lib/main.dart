@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tm_countries/cubit/countries_cubit.dart';
 import 'package:tm_countries/cubit/favourites_cubit.dart';
+import 'package:tm_countries/cubit/my_country/my_country_cubit.dart';
 import 'package:tm_countries/utils/colors.dart';
 import 'package:tm_countries/views/about/about_page.dart';
 
 import 'package:tm_countries/views/accueil/accueil.dart';
 import 'package:tm_countries/views/components/page_header.dart';
 import 'package:tm_countries/views/favourites/favourite_page.dart';
+import 'package:tm_countries/views/myCountry/my_country_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,16 +54,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
+  const MyHomePage({super.key});
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -72,8 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const PageAccueil(),
     const FavouritesPage(),
     const AboutPage(),
-    const PageHeader(
-        title: "My Country", iconData: Icons.location_on, iconColor: Colors.teal),
+    const MyCountryPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -85,9 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers : [
-        BlocProvider(create: (context) => CountriesCubit()..fetchAllCountries()),
-        BlocProvider(create: (context) => FavouritesCubit()),
+      providers: [
+        BlocProvider(create: (_) => CountriesCubit()..fetchAllCountries()),
+        BlocProvider(create: (_) => FavouritesCubit()),
+        BlocProvider(create: (_) => MyCountryCubit()),
       ],
       child: Scaffold(
         body: Padding(
@@ -133,8 +132,4 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: _onItemTapped,
     );
   }
-
-  
 }
-
-
