@@ -44,8 +44,6 @@ class _MyCountryPageState extends State<MyCountryPage> {
                   child: Text(state.message),
                 );
               } else if (state is MyCountryLoadedState) {
-                BlocProvider.of<CountriesCubit>(context)
-                    .fetchNeighbours(state.country.borders);
                 return Column(
                   children: [
                     Text(
@@ -84,7 +82,7 @@ class _MyCountryPageState extends State<MyCountryPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const NeighbourCountries(),
+                    NeighbourCountries(country: state.country),
                     const SizedBox(
                       height: 40,
                     ),

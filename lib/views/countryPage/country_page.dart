@@ -20,85 +20,77 @@ class CountryInfo extends StatefulWidget {
 class _CountryInfoState extends State<CountryInfo> {
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) =>
-              CountriesCubit()..fetchNeighbours(widget.country.borders),
-        )
-      ],
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _imageHeader(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0, vertical: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 25.0),
-                      child: Row(
-                        children: [
-                          CustomBackButton(
-                              imageUrl: widget.country.countryFlag!.png),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          Text(
-                            "${widget.country.emojiFlag} ${widget.country.name.common}",
-                            style: Theme.of(context).textTheme.headline3,
-                          ),
-                        ],
-                      ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _imageHeader(),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30.0, vertical: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25.0),
+                    child: Row(
+                      children: [
+                        CustomBackButton(
+                            imageUrl: widget.country.countryFlag!.png),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        Text(
+                          "${widget.country.emojiFlag} ${widget.country.name.common}",
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ],
                     ),
-                    Text(
-                      widget.country.name.official,
-                      style: Theme.of(context).textTheme.headline2,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    RegionWidget(country: widget.country),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Text(
-                      "Neighbouring Countries",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .merge(const TextStyle(color: Colors.blue)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const NeighbourCountries(),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    CapitalCityWidget(capital: widget.country.capitals![0]),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    AreaAndPopluation(
-                        area: widget.country.area!,
-                        population: widget.country.population!),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    GoogleMapsWidget(
-                      countryMap: widget.country.countryMap!,
-                    ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    widget.country.name.official,
+                    style: Theme.of(context).textTheme.headline2,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  RegionWidget(country: widget.country),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Text(
+                    "Neighbouring Countries",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline2!
+                        .merge(const TextStyle(color: Colors.blue)),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  NeighbourCountries(country: widget.country),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  CapitalCityWidget(capital: widget.country.capitals![0]),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  AreaAndPopluation(
+                      area: widget.country.area!,
+                      population: widget.country.population!),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  GoogleMapsWidget(
+                    countryMap: widget.country.countryMap!,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -154,44 +146,89 @@ class AreaAndPopluation extends StatelessWidget {
 }
 
 class NeighbourCountries extends StatelessWidget {
-  const NeighbourCountries({Key? key}) : super(key: key);
+  const NeighbourCountries({Key? key, required this.country}) : super(key: key);
+  final Country country;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CountriesCubit, CountriesState>(
-        builder: (BuildContext context, CountriesState state) {
-      if (state is NeighbouringCountriesLoadedState) {
-        int contHeight = (state.neighbourCountries.length / 2).ceil();
-        return Container(
-          height: contHeight * 170,
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-          decoration: BoxDecoration(
-            color: Colors.teal.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  mainAxisExtent: 140),
-              itemCount: state.neighbourCountries.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _neighbourCountryListItem(
-                    context, state.neighbourCountries[index]);
-              }),
-        );
-      } else if (state is CountriesLoadingState) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      } else {
-        return const Center(
-          child: Text("No Neighbours"),
-        );
-      }
-    });
+    if (country.borders == null || country.borders!.isEmpty) {
+      return const Center(
+        child: Text("No Neighbouring Countries"),
+      );
+    }
+    return FutureBuilder(
+        future: CountriesCubit.get(context).fetchNeighbours(country.borders),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Error retrieving Neighbouring Countries"),
+              );
+            }
+            List<Country> neighbourCountries = snapshot.data as List<Country>;
+            int contHeight = (neighbourCountries.length / 2).ceil();
+            return Container(
+              height: contHeight * 180,
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.teal.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: GridView.builder(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                          mainAxisExtent: 140),
+                  itemCount: neighbourCountries.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _neighbourCountryListItem(
+                        context, neighbourCountries[index]);
+                  }),
+            );
+          }
+        });
+    // return BlocBuilder<CountriesCubit, CountriesState>(
+    //     builder: (BuildContext context, CountriesState state) {
+    //   if (state is NeighbouringCountriesLoadedState) {
+    //     int contHeight = (state.neighbourCountries.length / 2).ceil();
+    //     return Container(
+    //       height: contHeight * 170,
+    //       width: double.infinity,
+    //       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    //       decoration: BoxDecoration(
+    //         color: Colors.teal.withOpacity(0.1),
+    //         borderRadius: BorderRadius.circular(15.0),
+    //       ),
+    //       child: GridView.builder(
+    //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //               crossAxisCount: 2,
+    //               crossAxisSpacing: 20,
+    //               mainAxisSpacing: 20,
+    //               mainAxisExtent: 140),
+    //           itemCount: state.neighbourCountries.length,
+    //           itemBuilder: (BuildContext context, int index) {
+    //             return _neighbourCountryListItem(
+    //                 context, state.neighbourCountries[index]);
+    //           }),
+    //     );
+    //   } else if (state is CountriesLoadingState) {
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   } else {
+    //     return const Center(
+    //       child: Text("No Neighbours"),
+    //     );
+    //   }
+    // });
   }
 
   Widget _neighbourCountryListItem(BuildContext context, Country country) {

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tm_countries/models/country.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
@@ -9,6 +10,8 @@ part 'countries_state.dart';
 
 class CountriesCubit extends Cubit<CountriesState> {
   CountriesCubit() : super(CountriesInitialState());
+
+  static CountriesCubit get(context) => BlocProvider.of(context);
 
   Future<void> fetchAllCountries() async {
     emit(CountriesLoadingState());
@@ -34,22 +37,38 @@ class CountriesCubit extends Cubit<CountriesState> {
     }
   }
 
-  Future<void> fetchNeighbours(List<String>? borders) async {
+  Future<List<Country>> fetchNeighbours(List<String>? borders) async {
+    print("fetching neighbours : ${state.toString()}}");
     try {
-      List<Country> countriesData = [];
+      List<Country> neighbourCountries = [];
+      if (state is CountriesLoadedState) {
+        List<Country> allCountries =
+            (state as CountriesLoadedState).countriesData;
+        // print(
+        // "[$state] fetching neighbours from local data ${allCountries.length}");
+        for (var border in borders!) {
+          var country = allCountries.firstWhere(
+            (country) => country.codeName == border || country.cca3 == border,
+          );
+          print("found neighbour : ${country.name.official}");
+          neighbourCountries.add(country);
+        }
+        print("Fetched neighbours : ${neighbourCountries.length}");
+        return Future.value(neighbourCountries);
+      }
       for (var border in borders!) {
+        print("fetching neighbours from api");
         var response = await Dio()
             .get("https://restcountries.com/v3.1/alpha?codes=$border");
         if (response.statusCode == 200) {
           Country countryData = Country.fromJson(response.data[0]);
-          countriesData.add(countryData);
-          print("$border ${countryData.name.common}");
+          neighbourCountries.add(countryData);
         }
       }
-      emit(NeighbouringCountriesLoadedState(neighbourCountries: countriesData));
+      return Future.value(neighbourCountries);
     } catch (e) {
-      emit(CountriesErrorState(message: e.toString()));
       print("Error : $e");
+      rethrow;
     }
   }
 
@@ -64,8 +83,9 @@ class CountriesCubit extends Cubit<CountriesState> {
     CountriesLoadedState currentState = state as CountriesLoadedState;
     int countryIndex = currentState.countriesData.indexWhere((otherCountries) =>
         otherCountries.name.official == country.name.official);
-    currentState.countriesData[countryIndex].isFavourite = isFavourite(country) ? false : true;
-    
+    currentState.countriesData[countryIndex].isFavourite =
+        isFavourite(country) ? false : true;
+
     emit(CountriesLoadedState(countriesData: currentState.countriesData));
   }
 

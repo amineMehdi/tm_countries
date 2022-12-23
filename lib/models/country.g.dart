@@ -27,6 +27,7 @@ Country _$CountryFromJson(Map<String, dynamic> json) => Country(
       emojiFlag: json['flag'] as String?,
       borders:
           (json['borders'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      cca3: json['cca3'] as String?,
     );
 
 Map<String, dynamic> _$CountryToJson(Country instance) => <String, dynamic>{
@@ -34,6 +35,7 @@ Map<String, dynamic> _$CountryToJson(Country instance) => <String, dynamic>{
       'region': instance.region,
       'subregion': instance.subregion,
       'cioc': instance.codeName,
+      'cca3': instance.cca3,
       'capital': instance.capitals,
       'borders': instance.borders,
       'area': instance.area,
