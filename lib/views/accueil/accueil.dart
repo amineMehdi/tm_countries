@@ -32,10 +32,8 @@ class _MyWidgetState extends State<PageAccueil> {
     );
   }
 
-  Widget countriesList(
-      BuildContext context) {
-    return Builder(
-        builder: (context) {
+  Widget countriesList(BuildContext context) {
+    return Builder(builder: (context) {
       CountriesState state = context.watch<CountriesCubit>().state;
 
       if (state is CountriesLoadedState) {
@@ -141,7 +139,8 @@ class _MyWidgetState extends State<PageAccueil> {
                   return IconButton(
                     splashRadius: 0.1,
                     onPressed: () {
-                      if (BlocProvider.of<FavouritesCubit>(context).isFavourite(country)) {
+                      if (BlocProvider.of<FavouritesCubit>(context)
+                          .isFavourite(country)) {
                         BlocProvider.of<FavouritesCubit>(context)
                             .removeFromFavourites(country);
                         BlocProvider.of<CountriesCubit>(context)

@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +28,8 @@ class CountriesCubit extends Cubit<CountriesState> {
       countriesData = (jsonDecode(response) as List)
           .map((country) => Country.fromJson(country))
           .toList();
+
+      countriesData.sort((a, b) => a.name.common.compareTo(b.name.common));
 
       emit(CountriesLoadedState(countriesData: countriesData));
     } catch (e) {
