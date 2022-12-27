@@ -33,10 +33,5 @@ class FavouritesCubit extends Cubit<FavouritesState> {
   @override
   void onChange(Change<FavouritesState> change) {
     super.onChange(change);
-    if (state is! FavouritesLoadedState) return;
-    print("Favorites: ");
-    for (Country c in (state as FavouritesLoadedState).countriesData) {
-      print("${c.name.official} \n");
-    }
   }
 }

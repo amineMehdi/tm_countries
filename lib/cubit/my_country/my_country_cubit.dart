@@ -13,6 +13,10 @@ class MyCountryCubit extends Cubit<MyCountryState> {
 
   Future getMyCountry() async {
     var location = loc.Location();
+    if (state is MyCountryLoadedState) {
+      print("Already loaded");
+      return;
+    }
     try {
       emit(MyCountryLoading());
       var serviceEnabled = await location.serviceEnabled();

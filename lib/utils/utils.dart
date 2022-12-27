@@ -38,5 +38,10 @@ String parsePopulation(int population) {
 }
 
 String parseArea(double area) {
-  return "${(area / 1000).toStringAsFixed(1)} km²";
+  if (area < 1000000) {
+    return "${(area / 1000).toStringAsFixed(2)}K km²";
+  } else if (area < 1000000000) {
+    return "${(area / 1000000).toStringAsFixed(2)}M km²";
+  }
+  return "${(area).toStringAsFixed(2)} km²";
 }

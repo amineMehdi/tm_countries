@@ -17,17 +17,17 @@ class CountriesCubit extends Cubit<CountriesState> {
 
     try {
       List<Country> countriesData = [];
-      // var response = await Dio().get("https://restcountries.com/v3.1/all");
+      var response = await Dio().get("https://restcountries.com/v3.1/all");
 
-      // countriesData = (response.data as List)
-      //     .map((country) => Country.fromJson(country))
-      //     .toList();
-
-      // TODO change to remote api
-      var response = await rootBundle.loadString('countries.json');
-      countriesData = (jsonDecode(response) as List)
+      countriesData = (response.data as List)
           .map((country) => Country.fromJson(country))
           .toList();
+
+      // TODO change to remote api
+      // var response = await rootBundle.loadString('countries.json');
+      // countriesData = (jsonDecode(response) as List)
+      //     .map((country) => Country.fromJson(country))
+      //     .toList();
 
       countriesData.sort((a, b) => a.name.common.compareTo(b.name.common));
 
@@ -39,26 +39,20 @@ class CountriesCubit extends Cubit<CountriesState> {
   }
 
   Future<List<Country>> fetchNeighbours(List<String>? borders) async {
-    print("fetching neighbours : ${state.toString()}}");
     try {
       List<Country> neighbourCountries = [];
       if (state is CountriesLoadedState) {
         List<Country> allCountries =
             (state as CountriesLoadedState).countriesData;
-        // print(
-        // "[$state] fetching neighbours from local data ${allCountries.length}");
         for (var border in borders!) {
           var country = allCountries.firstWhere(
             (country) => country.codeName == border || country.cca3 == border,
           );
-          print("found neighbour : ${country.name.official}");
           neighbourCountries.add(country);
         }
-        print("Fetched neighbours : ${neighbourCountries.length}");
         return Future.value(neighbourCountries);
       }
       for (var border in borders!) {
-        print("fetching neighbours from api");
         var response = await Dio()
             .get("https://restcountries.com/v3.1/alpha?codes=$border");
         if (response.statusCode == 200) {

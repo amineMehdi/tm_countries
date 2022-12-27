@@ -47,11 +47,13 @@ class _MyWidgetState extends State<PageAccueil> {
             ),
             Expanded(
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount:
+                      MediaQuery.of(context).size.width > 600 ? 3 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  mainAxisExtent: 200,
+                  mainAxisExtent:
+                      MediaQuery.of(context).size.width > 600 ? 300 : 200,
                 ),
                 itemCount: state.countriesData.length,
                 itemBuilder: (context, index) {
@@ -92,7 +94,7 @@ class _MyWidgetState extends State<PageAccueil> {
               children: [
                 Container(
                   width: double.infinity,
-                  height: 130,
+                  height: MediaQuery.of(context).size.width > 600 ? 230 : 130,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(country.countryFlag!.png),

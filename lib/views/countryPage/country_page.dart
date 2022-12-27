@@ -40,8 +40,10 @@ class _CountryInfoState extends State<CountryInfo> {
 
   Widget _countryInfoDesktop(BuildContext context) {
     return Padding(
+      // constraints: const BoxConstraints(maxWidth: 1200),
       padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             children: [
@@ -70,6 +72,10 @@ class _CountryInfoState extends State<CountryInfo> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Flexible(child: RegionWidget(country: widget.country)),
+              const SizedBox(
+                width: 20,
+              ),
               Flexible(
                 child: Column(
                   children: [
@@ -88,26 +94,29 @@ class _CountryInfoState extends State<CountryInfo> {
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 20,
+            ],
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Neighbouring Countries",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1!
+                    .merge(const TextStyle(color: Colors.teal)),
               ),
-              Flexible(
-                child: Column(
-                  children: [
-                    Text(
-                      "Neighbouring Countries",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .merge(const TextStyle(color: Colors.teal)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    NeighbourCountries(country: widget.country),
-                  ],
-                ),
-              )
+              const SizedBox(
+                height: 20,
+              ),
+              NeighbourCountries(
+                country: widget.country,
+                crossAxisCount:
+                    MediaQuery.of(context).size.width > 1200 ? 4 : 3,
+              ),
             ],
           )
         ],
@@ -236,8 +245,11 @@ class AreaAndPopluation extends StatelessWidget {
 }
 
 class NeighbourCountries extends StatelessWidget {
-  const NeighbourCountries({Key? key, required this.country}) : super(key: key);
+  const NeighbourCountries(
+      {Key? key, required this.country, this.crossAxisCount = 2})
+      : super(key: key);
   final Country country;
+  final int crossAxisCount;
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +272,8 @@ class NeighbourCountries extends StatelessWidget {
               );
             }
             List<Country> neighbourCountries = snapshot.data as List<Country>;
-            int contHeight = (neighbourCountries.length / 2).ceil();
+            int contHeight =
+                (neighbourCountries.length / crossAxisCount).ceil();
             return Container(
               height: contHeight * 180,
               width: double.infinity,
@@ -270,8 +283,8 @@ class NeighbourCountries extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 20,
                       mainAxisExtent: 140),
@@ -283,65 +296,34 @@ class NeighbourCountries extends StatelessWidget {
             );
           }
         });
-    // return BlocBuilder<CountriesCubit, CountriesState>(
-    //     builder: (BuildContext context, CountriesState state) {
-    //   if (state is NeighbouringCountriesLoadedState) {
-    //     int contHeight = (state.neighbourCountries.length / 2).ceil();
-    //     return Container(
-    //       height: contHeight * 170,
-    //       width: double.infinity,
-    //       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-    //       decoration: BoxDecoration(
-    //         color: Colors.teal.withOpacity(0.1),
-    //         borderRadius: BorderRadius.circular(15.0),
-    //       ),
-    //       child: GridView.builder(
-    //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //               crossAxisCount: 2,
-    //               crossAxisSpacing: 20,
-    //               mainAxisSpacing: 20,
-    //               mainAxisExtent: 140),
-    //           itemCount: state.neighbourCountries.length,
-    //           itemBuilder: (BuildContext context, int index) {
-    //             return _neighbourCountryListItem(
-    //                 context, state.neighbourCountries[index]);
-    //           }),
-    //     );
-    //   } else if (state is CountriesLoadingState) {
-    //     return const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   } else {
-    //     return const Center(
-    //       child: Text("No Neighbours"),
-    //     );
-    //   }
-    // });
   }
 
   Widget _neighbourCountryListItem(BuildContext context, Country country) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.teal.withOpacity(0.36),
-        borderRadius: BorderRadius.circular(15.0),
-      ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
           if (Navigator.of(context).canPop()) Navigator.of(context).pop();
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => CountryInfo(country: country)));
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(country.emojiFlag!, style: const TextStyle(fontSize: 40)),
-            const SizedBox(height: 15),
-            Text(country.name.common,
-                style: Theme.of(context).textTheme.headline4,
-                textAlign: TextAlign.center),
-          ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.teal.withOpacity(0.36),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(country.emojiFlag!, style: const TextStyle(fontSize: 40)),
+              const SizedBox(height: 15),
+              Text(country.name.common,
+                  style: Theme.of(context).textTheme.headline4,
+                  textAlign: TextAlign.center),
+            ],
+          ),
         ),
       ),
     );
@@ -604,21 +586,15 @@ class GoogleMapsWidget extends StatelessWidget {
           }
         },
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
           backgroundColor: Colors.teal.withOpacity(0.1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           const Icon(Icons.map_outlined, size: 40, color: Colors.teal),
-          const SizedBox(
-            width: 40,
-          ),
           Text("Google Maps", style: Theme.of(context).textTheme.headline3),
-          const SizedBox(
-            width: 40,
-          ),
           const Icon(Icons.launch_outlined, size: 40, color: Colors.teal),
         ]),
       ),
